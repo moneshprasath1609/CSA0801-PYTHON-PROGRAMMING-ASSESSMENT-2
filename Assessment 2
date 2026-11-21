@@ -1,0 +1,252 @@
+def separate_if(units, ration, senior):
+    result = []
+
+    if units <= 100:
+        result.append("Full subsidy")
+
+    if 101 <= units <= 200 and ration:
+        result.append("Partial subsidy")
+
+    if units > 200 and senior:
+        result.append("Special subsidy")
+
+    if not result:
+        result.append("No subsidy")
+
+    return result
+
+
+def one_decision(units, ration, senior):
+    if units <= 100:
+        return "Full subsidy"
+    elif 101 <= units <= 200 and ration:
+        return "Partial subsidy"
+    elif units > 200 and senior:
+        return "Special subsidy"
+    else:
+        return "No subsidy"
+
+
+for row in [
+    (100, False, False),
+    (101, True, False),
+    (200, True, False),
+    (201, False, True)
+]:
+    print(row, one_decision(*row))
+correct_otp = "4821"
+
+for attempt in range(3):
+    entered = input("OTP: ").strip()
+
+    if entered == "":
+        print("Blank entry; try again")
+        continue
+
+    if entered == correct_otp:
+        print("Verified")
+        break
+
+    print("Wrong OTP")
+
+else:
+    print("Account locked for 30 minutes")
+
+
+# while version
+attempts = 0
+
+while attempts < 3:
+    entered = input("OTP: ").strip()
+
+    if not entered:
+        continue
+
+    attempts += 1
+
+    if entered == correct_otp:
+        print("Verified")
+        break
+
+else:
+    print("Account locked for 30 minutes")
+
+
+def verify_recursive(attempt, limit, otp):
+    if attempt == limit:
+        print("Account locked")
+        return
+
+    entered = input("OTP: ").strip()
+
+    if not entered:
+        return verify_recursive(attempt, limit, otp)
+
+    if entered == otp:
+        print("Verified")
+def normalise(text):
+    return text.strip().replace(" ", "").replace("-", "").upper()
+
+
+def is_valid(reg):
+    if len(reg) not in (9, 10):
+        return False
+
+    return (
+        reg[:2].isalpha()
+        and reg[2:4].isdigit()
+        and reg[4:-4].isalpha()
+        and len(reg[4:-4]) in (1, 2)
+        and reg[-4:].isdigit()
+    )
+
+
+def format_reg(reg):
+    if not is_valid(reg):
+        raise ValueError("Invalid registration number")
+
+    return f"{reg[:2]} {reg[2:4]} {reg[4:-4]} {reg[-4:]}"
+
+
+tests = [
+    "tn 09 ab 1234",
+    "KA-01-M-0007",
+    "TN9AB1234",
+    "TN 22 1234 AB",
+    "MH12P1234",
+    "XX-99-ZZ-9999"
+]
+
+for raw in tests:
+    reg = normalise(raw)
+    print(raw, "->", reg, is_valid(reg))
+import time
+
+items = [f"Item{i}:Rs{i % 50}" for i in range(200_000)]
+
+
+def build_plus(parts):
+    text = ""
+
+    for part in parts:
+        text += part + ";"
+
+    return text
+
+
+def build_join(parts):
+    return "".join(part + ";" for part in parts)
+
+
+for n in (1_000, 10_000, 200_000):
+    sample = items[:n]
+
+    for fn in (build_plus, build_join):
+        start = time.perf_counter()
+        result = fn(sample)
+        print(n, fn.__name__, time.perf_counter()-start, len(result))
+def add_item_buggy(item, order=[]):
+    order.append(item)
+    return order
+
+
+def add_item(item, order=None):
+    if order is None:
+        order = []
+
+    order.append(item)
+    return order
+
+
+print(add_item_buggy("Tea"), add_item_buggy("Vada"))
+print(add_item("Tea"), add_item("Vada"))
+print(add_item_buggy.__defaults__)
+
+
+def bill(amount, gst_rate=0.05):
+    gst = amount * gst_rate
+    return amount + gst, gst
+
+
+total, gst = bill(1000)
+print(total, gst)
+
+
+global_count = 0
+
+
+def use_global():
+    global global_count
+    global_count += 1
+
+
+def outer():
+    count = 0
+
+    def inner():
+        nonlocal count
+        count += 1
+
+    inner()
+    return count
+
+
+local_value = 10
+from functools import lru_cache
+
+calls = 0
+
+
+def ways_naive(n):
+    global calls
+    calls += 1
+
+    if n <= 1:
+        return 1
+
+    return ways_naive(n-1) + ways_naive(n-2)
+
+
+@lru_cache(maxsize=None)
+def ways_memo(n):
+    global calls
+    calls += 1
+
+    if n <= 1:
+        return 1
+
+    return ways_memo(n-1) + ways_memo(n-2)
+
+
+def ways_loop(n):
+    if n <= 1:
+        return 1
+
+    a, b = 1, 1
+
+    for _ in range(2, n+1):
+        a, b = b, a+b
+
+    return b
+
+
+for n in range(1, 7):
+    print(n, ways_loop(n))
+
+        return
+
+    verify_recursive(attempt + 1, limit, otp)
+def original(parts):
+    result = ""
+
+    for part in parts:
+        result += part + ";"
+
+    return result
+
+
+def redesigned(parts):
+    return "".join(part + ";" for part in parts)
+
+
+assert original(["A", "B"]) == redesigned(["A", "B"])
